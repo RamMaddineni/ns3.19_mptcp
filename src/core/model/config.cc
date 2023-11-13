@@ -676,18 +676,24 @@ bool SetDefaultFailSafe (std::string fullName, const AttributeValue &value)
 {
   NS_LOG_FUNCTION (fullName << &value);
   std::string::size_type pos = fullName.rfind ("::");
+   std::cout<<"fullname : "<<fullName<<"\n";
   if (pos == std::string::npos)
     {
       return false;
     }
+     std::cout<<"fullname : "<<fullName<<"\n";
   std::string tidName = fullName.substr (0, pos);
   std::string paramName = fullName.substr (pos+2, fullName.size () - (pos+2));
+  
+  std::cout<<tidName<<" "<<paramName<<"\n";
   TypeId tid;
   bool ok = TypeId::LookupByNameFailSafe (tidName, &tid);
+   // std::cout<<"fullname : "<<fullName<<"\n";
   if (!ok)
     {
       return false;
     }
+    //  std::cout<<"ok  : "<<fullName<<"\n";
   for (uint32_t j = 0; j < tid.GetAttributeN (); j++)
     {
       struct TypeId::AttributeInformation tmp = tid.GetAttribute(j);
@@ -702,6 +708,8 @@ bool SetDefaultFailSafe (std::string fullName, const AttributeValue &value)
           return true;
         }
     }
+    
+   // std::cout<<"last false before \n";
   return false;
 }
 void SetGlobal (std::string name, const AttributeValue &value)

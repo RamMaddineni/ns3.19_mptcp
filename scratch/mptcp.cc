@@ -34,6 +34,94 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("MpTcpBulkSendExample");
 
+
+// double old_time = 0.0;
+// EventId output;
+// Time current = Time::FromInteger(3, Time::S);  //Only record cwnd and ssthresh values every 3 seconds
+// bool first = true;
+
+// static void
+// OutputTrace ()
+// {
+//  // *stream->GetStream() << newtime << " " << newval << std::endl;
+//  // old_time = newval;
+// }
+// static void
+// CwndTracer (Ptr<OutputStreamWrapper>stream, uint32_t oldval, uint32_t newval)
+// {
+//   double new_time = Simulator::Now().GetSeconds();
+//   if (old_time == 0 && first)
+//   {
+//     double mycurrent = current.GetSeconds();
+//     *stream->GetStream() << new_time << " " << mycurrent << " " << newval << std::endl;
+//     first = false;
+//     output = Simulator::Schedule(current,&OutputTrace);
+//   }
+//   else
+//   {
+//     if (output.IsExpired())
+//     {
+//       *stream->GetStream() << new_time << " " << newval << std::endl;
+//       output.Cancel();
+//       output = Simulator::Schedule(current,&OutputTrace);
+//     }
+//   }
+// }
+
+// static void
+// SsThreshTracer (Ptr<OutputStreamWrapper>stream, uint32_t oldval, uint32_t newval)
+// {
+//   double new_time = Simulator::Now().GetSeconds();
+//   if (old_time == 0 && first)
+//   {
+//     double mycurrent = current.GetSeconds();
+//     *stream->GetStream() << new_time << " " << mycurrent << " " << newval << std::endl;
+//     first = false;
+//     output = Simulator::Schedule(current,&OutputTrace);
+//   }
+//   else
+//   {
+//     if (output.IsExpired())
+//     {
+//       *stream->GetStream() << new_time << " " << newval << std::endl;
+//       output.Cancel();
+//       output = Simulator::Schedule(current,&OutputTrace);
+//     }
+//   }
+// }
+
+// static void
+// TraceCwnd (std::string cwnd_tr_file_name)
+// {
+//   AsciiTraceHelper ascii;
+//   if (cwnd_tr_file_name.compare("") == 0)
+//      {
+//        NS_LOG_DEBUG ("No trace file for cwnd provided");
+//        return;
+//      }
+//   else
+//     {
+//       Ptr<OutputStreamWrapper> stream = ascii.CreateFileStream(cwnd_tr_file_name.c_str());
+//       Config::ConnectWithoutContext ("/NodeList/1/$ns3::MpTcpSocketBase/SocketList/0/",MakeBoundCallback (&CwndTracer, stream));
+//     }
+// }
+
+// static void
+// TraceSsThresh(std::string ssthresh_tr_file_name)
+// {
+//   AsciiTraceHelper ascii;
+//   if (ssthresh_tr_file_name.compare("") == 0)
+//     {
+//       NS_LOG_DEBUG ("No trace file for ssthresh provided");
+//       return;
+//     }
+//   else
+//     {
+//       Ptr<OutputStreamWrapper> stream = ascii.CreateFileStream(ssthresh_tr_file_name.c_str());
+//       Config::ConnectWithoutContext ("/NodeList/1/$ns3::MpTcpSocketBase/SocketList/0/SlowStartThreshold",MakeBoundCallback (&SsThreshTracer, stream));
+//     }
+// }
+
 int
 main(int argc, char *argv[])
 {
@@ -46,11 +134,11 @@ main(int argc, char *argv[])
   Config::SetDefault("ns3::DropTailQueue::MaxPackets", UintegerValue(100));
   Config::SetDefault("ns3::TcpL4Protocol::SocketType", TypeIdValue(MpTcpSocketBase::GetTypeId()));
   Config::SetDefault("ns3::MpTcpSocketBase::MaxSubflows", UintegerValue(8)); // Sink
-  //Config::SetDefault("ns3::MpTcpSocketBase::CongestionControl", StringValue("RTT_Compensator"));
-  //Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
-
+  Config::SetDefault("ns3::MpTcpSocketBase::CongestionControl", StringValue("RTT_Compensator"));
+  Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
+  // Config::SetDefault("ns3::MpTcpSocketBase::shortPlotting", BooleanValue(true));  
   NodeContainer nodes;
-  nodes.Create(2);
+  nodes.Create(5);
 
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute("DataRate", StringValue("100Mbps"));
@@ -78,6 +166,36 @@ main(int argc, char *argv[])
   sourceApps.Start(Seconds(0.0));
   sourceApps.Stop(Seconds(10.0));
 
+  // bool tracing =true;
+  // std::string tr_file_name="mptcp_trace_file";
+  // std::string ssthresh_tr_file_name="mptcp_ssthresh";
+  // std::string cwnd_tr_file_name="mptcp_cwnd";
+  // // InternetStackHelper stack;
+  // // stack.InstallAll ();
+  // if (tracing)
+  // {
+  
+  //   std::ofstream ascii;
+  //   printf("came here");
+  //   Ptr<OutputStreamWrapper> ascii_wrap;
+  //   printf("Line 323");
+  //   if (tr_file_name.compare("") == 0)
+  //     {
+  //       NS_LOG_DEBUG ("No trace file provided");
+  //       exit (1);
+  //     }
+  //   else
+  //     {
+  //       ascii.open (tr_file_name.c_str());
+  //       ascii_wrap = new OutputStreamWrapper(tr_file_name.c_str(), std::ios::out);
+  //     }
+  //   printf("Line 334");
+  //   // stack.EnableAsciiIpv4All (ascii_wrap);
+
+  //   Simulator::Schedule(Seconds(0.00001), &TraceCwnd, cwnd_tr_file_name);
+  //   Simulator::Schedule(Seconds(0.00001), &TraceSsThresh, ssthresh_tr_file_name);
+  //     printf("came here 2");
+  // }
   NS_LOG_INFO ("Run Simulation.");
   Simulator::Stop(Seconds(20.0));
   Simulator::Run();
