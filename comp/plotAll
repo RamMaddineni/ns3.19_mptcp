@@ -1,0 +1,12 @@
+# Gnuplot script to plot data from files and save as PNG
+set term png
+set output "CongestionPlots.png"
+set xlabel "time"
+set ylabel "Congestion Window size"
+set title "2D Plot"
+set key right top
+
+plot  "mptcpNewReno.cwnd" using 1:2 with lines title "Mptcp New Reno",\
+    "sixth_Reno.cwnd" using 1:2 with lines title "Reno", \
+     "sixth_NewReno.cwnd" using 1:2 with lines title "NewReno", \
+     "sixth.cwnd" using 1:2 with lines title "Normal Tcp"

@@ -138,7 +138,7 @@ main(int argc, char *argv[])
   Config::SetDefault("ns3::MpTcpSocketBase::PathManagement", StringValue("NdiffPorts"));
   // Config::SetDefault("ns3::MpTcpSocketBase::shortPlotting", BooleanValue(true));  
   NodeContainer nodes;
-  nodes.Create(5);
+  nodes.Create(2);
 
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute("DataRate", StringValue("100Mbps"));
@@ -158,13 +158,13 @@ main(int argc, char *argv[])
   MpTcpPacketSinkHelper sink("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port));
   ApplicationContainer sinkApps = sink.Install(nodes.Get(1));
   sinkApps.Start(Seconds(0.0));
-  sinkApps.Stop(Seconds(10.0));
+  sinkApps.Stop(Seconds(15.0));
 
   MpTcpBulkSendHelper source("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address(i.GetAddress(1)), port));
   source.SetAttribute("MaxBytes", UintegerValue(0));
   ApplicationContainer sourceApps = source.Install(nodes.Get(0));
   sourceApps.Start(Seconds(0.0));
-  sourceApps.Stop(Seconds(10.0));
+  sourceApps.Stop(Seconds(15.0));
 
   // bool tracing =true;
   // std::string tr_file_name="mptcp_trace_file";
