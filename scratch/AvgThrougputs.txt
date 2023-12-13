@@ -1,0 +1,7 @@
+MPTCP New Reno : 32789.4839641/100 = 327.89 mbps
+
+Tcp Reno : 17318.0/100 = 173.18 mbps
+
+Tcp New Reno : 19831.2283818/100= 198.31 mbps
+
+Tcp Normal : 12081.6611565/100= 120.81 mbps
